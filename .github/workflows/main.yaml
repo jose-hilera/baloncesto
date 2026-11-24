@@ -4,7 +4,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: descargar repostorio
+      - name: descargar repositorio
         uses: actions/checkout@v3
       - name: pruebas-unitarias
         run: mvn test
@@ -21,9 +21,12 @@ jobs:
   qa:
     needs: test
     runs-on: self-hosted
+    continue-on-error: true
     steps:
       - name: calidad-codigo
-        run: echo "calidad-codigo"
+        run: |
+          mvn sonar:sonar -Dsonar.host.url=http://sonarqube:9000 -Dsonar.qualitygate.wait=true -Dsonar.login=admin -Dsonar.password=admin
+
 
   deploy:
     needs: qa
